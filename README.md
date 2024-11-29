@@ -495,6 +495,7 @@ Modificar Libro:
     "fecha_publicacion": "1967-06-30",
     "categorias": ["Drama", "Clásico"]
 }
+```
 
 Crear categoria:
 
@@ -502,7 +503,6 @@ Crear categoria:
 {
     "nombre_categoria": "Thriller"
 }
-
 ```
 
 Ejemplo usando curl:
