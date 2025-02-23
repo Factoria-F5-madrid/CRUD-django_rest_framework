@@ -106,6 +106,7 @@ Para proteger información sensible como las credenciales de tu base de datos, e
 ### Instalación de mysqlclient
 
 Debes instalar mysqlclient, que es el adaptador que Django usa para conectarse a MySQL. Puedes hacerlo ejecutando:
+[Más información sobre mysqlclient aquí](https://www.josedomingo.org/pledin/2021/12/python3-mysql/#:~:text=mysqlclient%20%3A%20Es%20un%20fork%20del,algunos%20errores%20del%20proyecto%20original.)
 
 ```bash
 pip install mysqlclient
