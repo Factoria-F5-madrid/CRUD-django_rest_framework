@@ -13,10 +13,6 @@
 9. [Mejores Prácticas](#mejores-prácticas)
 10. [Recursos Adicionales](#recursos-adicionales)
 
-## Introducción
-
-Esta guía te llevará a través del proceso de creación de una API CRUD (Crear, Leer, Actualizar, Eliminar) utilizando Django y Django REST Framework (DRF). Construiremos una API simple para gestionar una lista de libros.
-
 ## Requisitos Previos
 
 - Python 3.8+
