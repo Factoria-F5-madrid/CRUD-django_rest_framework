@@ -418,8 +418,7 @@ urlpatterns = [
 ]
 ```
 
-Y luego en categorias/urls.py
-En libros/urls.py (crea este archivo si no existe):
+Y luego en categorias/urls.py (crea este archivo si no existe):
 
 ```python
 from django.urls import path
