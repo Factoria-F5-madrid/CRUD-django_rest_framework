@@ -100,6 +100,7 @@ crud_python/ # Carpeta donde guardas tu proyecto
 │   ├── urls.py 
 │   ├── views.py
 │
+├── .env
 ```
 
 ## Conexión a la Base de Datos usando .env
