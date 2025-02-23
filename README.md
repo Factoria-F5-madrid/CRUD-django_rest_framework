@@ -532,7 +532,7 @@ curl -X DELETE http://localhost:8000/api/libros/<id>/
 4. Implementa paginación para conjuntos de datos grandes.
 5. Utiliza filtros y funcionalidad de búsqueda cuando sea apropiado.
 6. Escribe pruebas para tus vistas y serializadores de API.
-7. Documenta tu API utilizando herramientas como Swagger o ReDoc.
+7. Documenta tu API utilizando herramientas como Postman.
 
 ## Recursos Adicionales
 
@@ -541,3 +541,5 @@ curl -X DELETE http://localhost:8000/api/libros/<id>/
 - [Django para APIs (Libro de William S. Vincent)](https://djangoforapis.com/)
 - [Classy Django REST Framework](https://www.cdrf.co/)
 - [Django REST Framework: Relaciones de Serializador](https://www.django-rest-framework.org/api-guide/relations/)
+- [Viewsets en django](https://www.django-rest-framework.org/api-guide/viewsets/)
+- [Rutas en Django](https://www.django-rest-framework.org/api-guide/routers/)
