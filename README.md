@@ -576,3 +576,4 @@ curl -X DELETE http://localhost:8000/api/libros/<id>/
 - [Django REST Framework: Relaciones de Serializador](https://www.django-rest-framework.org/api-guide/relations/)
 - [Viewsets en django](https://www.django-rest-framework.org/api-guide/viewsets/)
 - [Rutas en Django](https://www.django-rest-framework.org/api-guide/routers/)
+- [Migración de SQLite3 a MySQL](https://stackoverflow.com/questions/3034910/whats-the-best-way-to-migrate-a-django-db-from-sqlite-to-mysql)
