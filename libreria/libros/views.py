@@ -14,18 +14,11 @@ class VistasLibros():
     
     @api_view(['POST'])
     def CrearLibros(request):
-        data = request.data
-        categoria_nombres = data.pop('categorias', [])
-        categorias = Categoria.objects.filter(nombre_categoria__in=categoria_nombres)
 
-        serializer = LibroSerializer(data=data)
+        serializer = LibroSerializer(data = request.data)
         if serializer.is_valid():
-            libro = serializer.create({
-                **serializer.validated_data,
-                'categorias': categorias
-            })
-            response_serializer = LibroSerializer(libro)
-            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view(['GET', 'PUT', 'DELETE'])
@@ -40,11 +33,10 @@ class VistasLibros():
             return Response(serializer.data)
 
         elif request.method == 'PUT':
-            serializer = LibroSerializer(data=request.data)
+            serializer = LibroSerializer(libro, data=request.data)
             if serializer.is_valid():
-                updated_libro = serializer.update(libro, serializer.validated_data)
-                updated_serializer = LibroSerializer(updated_libro)
-                return Response(updated_serializer.data)
+                serializer.save()
+                return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         elif request.method == 'DELETE':

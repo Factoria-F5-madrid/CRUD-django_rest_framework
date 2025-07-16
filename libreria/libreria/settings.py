@@ -80,13 +80,22 @@ WSGI_APPLICATION = 'libreria.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-            'ENGINE': 'django.db.backends.mysql',  # Cambia el motor a MySQL
-            'NAME': os.getenv('DB_NAME'),          # Nombre de tu base de datos
-            'USER': os.getenv('DB_USER'),          # Usuario de tu base de datos
-            'PASSWORD': os.getenv('DB_PASSWORD'),  # Contraseña del usuario
-            'HOST': os.getenv('DB_HOST'),          # Dirección del servidor de la base de datos (e.g., 'localhost')
-            'PORT': os.getenv('DB_PORT'),
+    # 'default': {
+    #         'ENGINE': 'django.db.backends.postgresql_psycopg2',  # Cambia el motor a MySQL o postgres según tu base de datos
+    #         'NAME': os.getenv('DB_NAME'),          # Nombre de tu base de datos
+    #         'USER': os.getenv('DB_USER'),          # Usuario de tu base de datos
+    #         'PASSWORD': os.getenv('DB_PASSWORD'),  # Contraseña del usuario
+    #         'HOST': os.getenv('DB_HOST'),          # Dirección del servidor de la base de datos (e.g., 'localhost')
+    #         'PORT': os.getenv('DB_PORT'),
+    #     }
+
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',  # Cambia el motor a MySQL o postgres según tu base de datos
+            'NAME': "postgres",          # Nombre de tu base de datos
+            'USER': "postgres",          # Usuario de tu base de datos
+            'PASSWORD': "Estaesmicontraseña",  # Contraseña del usuario
+            'HOST': "db.ipsftdelgidynvcgbefw.supabase.co",          # Dirección del servidor de la base de datos (e.g., 'localhost')
+            'PORT': "5432",
         }
 }
 
