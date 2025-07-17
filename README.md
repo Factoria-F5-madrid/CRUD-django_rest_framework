@@ -147,7 +147,7 @@ load_dotenv()
 [...]
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Cambia el motor a MySQL
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',  # Cambia el motor a postgres
         'NAME': os.getenv('DB_NAME'),          # Nombre de tu base de datos
         'USER': os.getenv('DB_USER'),          # Usuario de tu base de datos
         'PASSWORD': os.getenv('DB_PASSWORD'),  # Contraseña del usuario
