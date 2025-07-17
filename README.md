@@ -469,19 +469,19 @@ streamlit run app.py
 
 3. Utiliza herramientas como curl, Postman o httpie para probar los endpoints de la API:
 
-- GET /api/libros/ (Listar todos los libros)
-- POST /api/libros/crear/ (Crear un nuevo libro)
-- GET /api/libros/<id>/ (Obtener un libro)
-- PUT /api/libros/<id>/ (Actualizar un libro)
-- DELETE /api/libros/<id>/ (Eliminar un libro)
+- GET /v1/libros/ (Listar todos los libros)
+- POST /v1/libros/crear/ (Crear un nuevo libro)
+- GET /v1/libros/<id>/ (Obtener un libro)
+- PUT /v1/libros/<id>/ (Actualizar un libro)
+- DELETE /v1/libros/<id>/ (Eliminar un libro)
 
 ---
 
-- GET /api/categorias/ (Listar todos los categorias)
-- POST /api/categorias/crear/ (Crear un nuevo categoria)
-- GET /api/categorias/<id>/ (Obtener un categoria)
-- PUT /api/categorias/<id>/ (Actualizar un categoria)
-- DELETE /api/categorias/<id>/ (Eliminar un categoria)
+- GET /v1/categorias/ (Listar todos los categorias)
+- POST /v1/categorias/crear/ (Crear un nuevo categoria)
+- GET /v1/categorias/<id>/ (Obtener un categoria)
+- PUT /v1/categorias/<id>/ (Actualizar un categoria)
+- DELETE /v1/categorias/<id>/ (Eliminar un categoria)
 
 ---
 
