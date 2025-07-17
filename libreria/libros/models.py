@@ -8,3 +8,6 @@ class Libro(models.Model):
     fecha_publicacion = models.DateField()
     
     categorias = models.ManyToManyField(Categoria, related_name='categorias')
+
+    def __str__(self):
+        return self.titulo

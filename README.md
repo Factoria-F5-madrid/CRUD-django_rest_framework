@@ -131,6 +131,9 @@ DB_PASSWORD=contraseña
 DB_HOST=localhost  # o la dirección de tu servidor de base de datos
 DB_PORT=3306       # o el puerto que uses (por defecto es 3306 para MySQL)
 ```
+
+También puedes crear un archivo `.env.example` con la estructura que ves arriba.
+
 3. Modificación de settings.py
 
     Actualiza settings.py para que Django cargue estas variables de entorno y configure la conexión a la base de datos:
@@ -160,12 +163,15 @@ En libros/models.py, crea el modelo Libro:
 
 ```python
 from django.db import models
+from categorias.models import Categoria
 
 class Libro(models.Model):
     titulo = models.CharField(max_length=100)
     autor = models.CharField(max_length=100)
-    isbn = models.CharField(max_length=13, unique=True)
+    isbn = models.CharField(max_length=13)
     fecha_publicacion = models.DateField()
+    
+    categorias = models.ManyToManyField(Categoria, related_name='categorias')
 
     def __str__(self):
         return self.titulo
@@ -383,7 +389,8 @@ urlpatterns = [
 pip install streamlit
 ```
 
-2. Crea un archivo llamod app.py e ingresa este código básico:
+2. Crea un archivo llamado `app.py` e ingresa este código básico:
+
 ```python
 import streamlit as st
 import requests
