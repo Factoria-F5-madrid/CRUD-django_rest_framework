@@ -104,13 +104,13 @@ crud_python/ # Carpeta donde guardas tu proyecto
 
 Para proteger información sensible como las credenciales de tu base de datos, es recomendable usar un archivo `.env` para almacenar estas configuraciones de manera segura.
 
-### Instalación de mysqlclient
+### Instalación de psycopg2 para usar postgreSQL
 
-Debes instalar mysqlclient, que es el adaptador que Django usa para conectarse a MySQL. Puedes hacerlo ejecutando:
-[Más información sobre mysqlclient aquí](https://www.josedomingo.org/pledin/2021/12/python3-mysql/#:~:text=mysqlclient%20%3A%20Es%20un%20fork%20del,algunos%20errores%20del%20proyecto%20original.)
+1. `psycopg2` es un paquete de Python que permite conectarte a bases de datos PostgreSQL desde tu código Python, de forma fácil y rápida.
+
 
 ```bash
-pip install mysqlclient
+ pip install psycopg2-binary
 ```
 
 ### Instalación de python-dotenv
@@ -199,60 +199,15 @@ Crea libros/serializers.py:
 ```python
 from rest_framework import serializers
 from .models import Libro
+from categorias.models import Categoria
 
 class LibroSerializer(serializers.ModelSerializer):
-    categorias = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Libro
-        fields = ['id', 'titulo', 'autor', 'isbn', 'fecha_publicacion']
-
-    def get_categorias(self, obj):
-        return [categoria.nombre_categoria for categoria in obj.categorias.all()]
-
-    def create(self, validated_data):
-        categorias_data = validated_data.pop('categorias', [])
-        libro = Libro.objects.create(**validated_data)
-        libro.categorias.set(categorias_data)
-        return libro
-
-    def update(self, instance, validated_data):
-        categorias_data = validated_data.pop('categorias', [])
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
-        instance.categorias.set(categorias_data)
-        return instance
-```
-
-o también podría ser así:
-
-```python
-from rest_framework import serializers
-from .models import Libro
-
-class LibroSerializer(serializers.ModelSerializer):
-    categorias = serializers.SerializerMethodField()
+    categorias = serializers.PrimaryKeyRelatedField(
+        queryset=Categoria.objects.all(), many=True
+    )
     class Meta:
         model = Libro
         fields = '__all__'
-
-    def get_categorias(self, obj):
-        return [categoria.nombre_categoria for categoria in obj.categorias.all()]
-
-    def create(self, validated_data):
-        categorias_data = validated_data.pop('categorias', [])
-        libro = Libro.objects.create(**validated_data)
-        libro.categorias.set(categorias_data)
-        return libro
-
-    def update(self, instance, validated_data):
-        categorias_data = validated_data.pop('categorias', [])
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
-        instance.categorias.set(categorias_data)
-        return instance
 ```
 
 Crea categorias/serializers.py:
@@ -272,22 +227,6 @@ class CategoriaSerializer(serializers.ModelSerializer):
 En libros/views.py, crea vistas para las operaciones CRUD:
 
 ```python
-from rest_framework import generics
-from .models import Libro
-from .serializers import LibroSerializer
-
-class ListaLibros(generics.ListCreateAPIView):
-    libros = Libro.objects.all()
-    serializer = LibroSerializer
-
-class DetalleLibro(generics.RetrieveUpdateDestroyAPIView):
-    libro = Libro.objects.all()
-    serializer = LibroSerializer
-```
-
-o también podría ser así:
-
-```python
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -304,18 +243,11 @@ class VistasLibros():
     
     @api_view(['POST'])
     def CrearLibros(request):
-        data = request.data
-        categoria_nombres = data.pop('categorias', [])
-        categorias = Categoria.objects.filter(nombre_categoria__in=categoria_nombres)
 
-        serializer = LibroSerializer(data=data)
+        serializer = LibroSerializer(data = request.data)
         if serializer.is_valid():
-            libro = serializer.create({
-                **serializer.validated_data,
-                'categorias': categorias
-            })
-            response_serializer = LibroSerializer(libro)
-            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view(['GET', 'PUT', 'DELETE'])
@@ -330,11 +262,10 @@ class VistasLibros():
             return Response(serializer.data)
 
         elif request.method == 'PUT':
-            serializer = LibroSerializer(data=request.data)
+            serializer = LibroSerializer(libro, data=request.data)
             if serializer.is_valid():
-                updated_libro = serializer.update(libro, serializer.validated_data)
-                updated_serializer = LibroSerializer(updated_libro)
-                return Response(updated_serializer.data)
+                serializer.save()
+                return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         elif request.method == 'DELETE':
@@ -398,8 +329,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('libros/', views.ListaLibros.as_view(), name='lista-libros'),
-    path('libros/<int:pk>/', views.DetalleLibro.as_view(), name='detalle-libro'),
+    path('', views.ListaLibros.as_view(), name='lista-libros'),
+    path('<int:pk>', views.DetalleLibro.as_view(), name='detalle-libro'),
 ]
 ```
 
@@ -410,9 +341,9 @@ from django.urls import path
 from .views import VistasLibros
 
 urlpatterns = [
-    path('libros', VistasLibros.ListaLibros, name="Lista_libros"),
-    path('libros/crear', VistasLibros.CrearLibros, name="crear_libros"),
-    path('libros/<int:pk>', VistasLibros.DetalleLibros, name="detalle_libros"),
+    path('', VistasLibros.ListaLibros, name="Lista_libros"),
+    path('crear', VistasLibros.CrearLibros, name="crear_libros"),
+    path('<int:pk>', VistasLibros.DetalleLibros, name="detalle_libros"),
 ]
 ```
 
@@ -423,9 +354,9 @@ from django.urls import path
 from .views import VistasCategorias
 
 urlpatterns = [
-    path('categorias/', VistasCategorias.ListaCategorias, name='lista-categoria'),
-    path('categorias/crear', VistasCategorias.crearCategorias, name='crear-categoria'),
-    path('categorias/<int:pk>/', VistasCategorias.DetalleCategorias, name='detalle-categoria'),
+    path('', VistasCategorias.ListaCategorias, name='lista-categoria'),
+    path('crear', VistasCategorias.crearCategorias, name='crear-categoria'),
+    path('<int:pk>', VistasCategorias.DetalleCategorias, name='detalle-categoria'),
 ]
 ```
 
@@ -437,9 +368,12 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('libros.urls')),
-    path('api/', include('categorias.urls')),
+    path('v1/', include([
+            path('libros/', include('libros.urls')),
+            path('categorias/', include('categorias.urls')),
+    ])),
 ]
+
 ```
 ## Crea un front con Streamlit
 
@@ -460,7 +394,7 @@ st.sidebar.write('Bienvenidxs a mi librería')
 st.title('Bienvenidxs a mi librería')
 st.write('Estos son mis libros desde mi API:')
 
-response = requests.get('http://127.0.0.1:8000/api/libros')
+response = requests.get('http://127.0.0.1:8000/v1/libros')
 if response.status_code == 200:
     libros = response.json()
     for libro in libros:
@@ -468,7 +402,7 @@ if response.status_code == 200:
         if st.button(f"Ver detalle {libro['id']}"):
             st.write(libro)
         if st.button(f"Borrar {libro['id']}"):
-            delete_response = requests.delete(f"http://127.0.0.1:8000/api/libros/{libro['id']}")
+            delete_response = requests.delete(f"http://127.0.0.1:8000/v1/libros/{libro['id']}")
             if delete_response.status_code == 204:
                 st.write(f"Libro {libro['id']} borrado")
             else:
@@ -513,7 +447,7 @@ Crear Libro:
     "autor": "Autor 1",
     "isbn": "0000000000000000000",
     "fecha_publicacion": "1967-05-30",
-    "categorias": ["Drama", "Clásico"]
+    "categorias": [1, 8]
 }
 
 ```
@@ -526,7 +460,7 @@ Modificar Libro:
     "autor": "Autor 2",
     "isbn": "0000000000000000000",
     "fecha_publicacion": "1967-06-30",
-    "categorias": ["Drama", "Clásico"]
+    "categorias": [1, 8]
 }
 ```
 
@@ -542,19 +476,19 @@ Ejemplo usando curl:
 
 ```bash
 # Listar todos los libros
-curl http://localhost:8000/api/libros/
+curl http://localhost:8000/v1/libros/
 
 # Crear un nuevo libro
-curl -X POST -H "Content-Type: application/json" -d '{"titulo":"Django para Principiantes","autor":"William S. Vincent","isbn":"9781735467207","fecha_publicacion":"2020-12-01"}' http://localhost:8000/api/libros/
+curl -X POST -H "Content-Type: application/json" -d '{"titulo":"Django para Principiantes","autor":"William S. Vincent","isbn":"9781735467207","fecha_publicacion":"2020-12-01"}' http://localhost:8000/v1/libros/
 
 # Obtener un libro (reemplaza <id> con un id real)
-curl http://localhost:8000/api/libros/<id>/
+curl http://localhost:8000/v1/libros/<id>/
 
 # Actualizar un libro (reemplaza <id> con un id real)
-curl -X PUT -H "Content-Type: application/json" -d '{"titulo":"Django para Profesionales","autor":"William S. Vincent","isbn":"9781735467214","fecha_publicacion":"2021-06-01"}' http://localhost:8000/api/libros/<id>/
+curl -X PUT -H "Content-Type: application/json" -d '{"titulo":"Django para Profesionales","autor":"William S. Vincent","isbn":"9781735467214","fecha_publicacion":"2021-06-01"}' http://localhost:8000/v1/libros/<id>/
 
 # Eliminar un libro (reemplaza <id> con un id real)
-curl -X DELETE http://localhost:8000/api/libros/<id>/
+curl -X DELETE http://localhost:8000/v1/libros/<id>/
 ```
 
 ## Mejores Prácticas
