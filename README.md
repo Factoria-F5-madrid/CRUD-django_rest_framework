@@ -21,6 +21,12 @@
 
 ## Configuración del Proyecto
 
+crea la carpeta donde vas a trabajar en el proyecto
+
+```bash
+mkdir crud_python
+```
+
 *Recuerda iniciar tu entorno virtual, sea que lo hagas con **"uv venv"** o con **"python -m venv venv"** por ejemplo, y actívalo*
 
 1. Instala Django
@@ -29,11 +35,29 @@
 pip install Django
 ```
 
-2. Crea un nuevo proyecto Django:
+2. Crea un nuevo proyecto Django (colocamos el punto al final para que no nos genere dos carpetas con el mismo nombre):
 
 ```bash
-django-admin startproject libreria
-cd libreria
+django-admin startproject sistema_libros .
+```
+
+si no colocamos el punto al final, la estructura de carpetas se vería así:
+
+*Se genera otra carpeta con el mismo nombre del project y lo envuelve como una carpeta "madre"*
+
+```plaintext
+
+crud_python/ # Carpeta donde guardas tu proyecto
+│
+├── sistema_libros/ 
+│   ├──sistema_libros/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── asgi.py
+│   └── wsgi.py
+│
+│   ├── manage.py
 ```
 
 3. Crea dos aplicaciones:
@@ -66,10 +90,10 @@ INSTALLED_APPS = [
 
 ### Esta sería tu estructura
 ```plaintext
+
 crud_python/ # Carpeta donde guardas tu proyecto
 │
-├── manage.py
-├── libreria/
+├── sistema_libros/
 │   ├── __init__.py
 │   ├── settings.py
 │   ├── urls.py
@@ -96,8 +120,12 @@ crud_python/ # Carpeta donde guardas tu proyecto
 │   ├── urls.py 
 │   ├── views.py
 │
+├── manage.py
 ├── .env
-├── app.py
+├── app
+├── .gitignore
+├── README.md
+├── requirements.txt
 ```
 
 ## Conexión a la Base de Datos usando .env
@@ -152,7 +180,7 @@ DATABASES = {
         'USER': os.getenv('DB_USER'),          # Usuario de tu base de datos
         'PASSWORD': os.getenv('DB_PASSWORD'),  # Contraseña del usuario
         'HOST': os.getenv('DB_HOST'),          # Dirección del servidor de la base de datos (e.g., 'localhost')
-        'PORT': os.getenv('DB_PORT'),          # Puerto de la base de datos (por defecto es 3306 para MySQL)
+        'PORT': os.getenv('DB_PORT'),          # Puerto de la base de datos (por defecto es 5432 para postgres)
     }
 }
 ```
@@ -225,7 +253,7 @@ from .models import Categoria
 class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categoria
-        fields = ['nombre_categoria']
+        fields = ['id','nombre_categoria']
 ```
 
 ## Creación de Vistas API
@@ -366,7 +394,7 @@ urlpatterns = [
 ]
 ```
 
-2. En libreria/urls.py, incluye las URLs de la aplicación libros:
+2. En sistema_libros/urls.py, incluye las URLs de la aplicación libros:
 
 ```python
 from django.contrib import admin
