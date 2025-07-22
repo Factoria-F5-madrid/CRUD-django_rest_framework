@@ -21,10 +21,14 @@
 
 ## Configuración del Proyecto
 
-crea la carpeta donde vas a trabajar en el proyecto
+Crea una carpeta y viaja a ella:
 
 ```bash
 mkdir crud_python
+```
+
+```bash
+cd crud_python
 ```
 
 *Recuerda iniciar tu entorno virtual, sea que lo hagas con **"uv venv"** o con **"python -m venv venv"** por ejemplo, y actívalo*
@@ -49,8 +53,8 @@ si no colocamos el punto al final, la estructura de carpetas se vería así:
 
 crud_python/ # Carpeta donde guardas tu proyecto
 │
-├── sistema_libros/ 
-│   ├──sistema_libros/
+├── sistema_libros/ # carpeta generada por no usar el punto
+│   ├──sistema_libros/ # el project de django
 │   ├── __init__.py
 │   ├── settings.py
 │   ├── urls.py
